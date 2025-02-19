@@ -2,9 +2,6 @@ import { createBrowserRouter } from "react-router-dom";
 import Error from "../pages/Error";
 import Home from "../pages/Home";
 import MainLayout from "../layout/MainLayout";
-import AllReviews from "../pages/AllReviews";
-import AddReviews from "../pages/AddReviews";
-import MyReviews from "../pages/MyReviews";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import PrivateRoute from "./PrivateRoute";
@@ -20,28 +17,6 @@ const routes = [
       {
         path: "/",
         element: <Home />,
-      },
-      {
-        path: "/all_reviews",
-        element: <AllReviews />,
-      },
-
-      {
-        path: "/add_review",
-        element: (
-          <PrivateRoute>
-            <AddReviews />
-          </PrivateRoute>
-        ),
-      },
-
-      {
-        path: "/my_reviews",
-        element: (
-          <PrivateRoute>
-            <MyReviews />
-          </PrivateRoute>
-        ),
       },
 
       {

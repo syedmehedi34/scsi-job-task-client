@@ -1,8 +1,10 @@
+import { TaskBoard } from "../components/TaskBoard";
+
 const Home = () => {
   return (
     <div>
       <div>
-        <h1>Home component</h1>
+        <TaskBoard></TaskBoard>
       </div>
     </div>
   );

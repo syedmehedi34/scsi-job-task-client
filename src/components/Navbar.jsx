@@ -5,6 +5,7 @@ import { useTheme } from "../providers/ThemeContext";
 import { Trello, Sun, Moon, User as UserIcon, Clock } from "lucide-react";
 import { ProfileModal } from "./ProfileModal";
 import { ActivityLog } from "./ActivityLog";
+import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
@@ -25,12 +26,14 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => setIsActivityOpen(true)}
-                className="p-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
-              >
-                <Clock size={20} />
-              </button>
+              {user && (
+                <button
+                  onClick={() => setIsActivityOpen(true)}
+                  className="p-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+                >
+                  <Clock size={20} />
+                </button>
+              )}
 
               <button
                 onClick={toggleTheme}
@@ -58,12 +61,19 @@ const Navbar = () => {
                     </button>
                   </>
                 ) : (
-                  <button
-                    onClick={() => console.log("Redirect to login")}
-                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-all"
-                  >
-                    Login
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <Link to="/auth/login">
+                      <button className="btn btn-primary  min-h-0 h-9 min-w-0  text-sm font-medium rounded-md transition-all">
+                        Login
+                      </button>
+                    </Link>
+
+                    <Link to="/auth/register">
+                      <button className="btn min-h-0 h-9 min-w-0 btn-outline  text-sm font-medium rounded-md transition-all">
+                        Register
+                      </button>
+                    </Link>
+                  </div>
                 )}
               </div>
             </div>
@@ -71,14 +81,18 @@ const Navbar = () => {
         </div>
       </header>
 
-      <ProfileModal
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-      />
-      <ActivityLog
-        isOpen={isActivityOpen}
-        onClose={() => setIsActivityOpen(false)}
-      />
+      {user && (
+        <>
+          <ProfileModal
+            isOpen={isProfileOpen}
+            onClose={() => setIsProfileOpen(false)}
+          />
+          <ActivityLog
+            isOpen={isActivityOpen}
+            onClose={() => setIsActivityOpen(false)}
+          />
+        </>
+      )}
     </div>
   );
 };
