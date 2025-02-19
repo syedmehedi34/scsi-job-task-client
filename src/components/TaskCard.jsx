@@ -22,9 +22,6 @@ export const TaskCard = ({ task }) => {
       className="p-3 mb-2 bg-white rounded shadow border cursor-grab hover:shadow-lg transition-all"
     >
       <h3 className="font-medium text-gray-800">{task.title}</h3>
-      <span className="text-xs text-gray-500 capitalize">
-        ({task.category})
-      </span>
     </div>
   );
 };

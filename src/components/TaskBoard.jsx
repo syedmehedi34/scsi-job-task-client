@@ -39,16 +39,22 @@ export const TaskBoard = () => {
           title="To Do"
           category="todo"
           tasks={tasks.filter((t) => t.category === "todo")}
+          setTasks={setTasks}
+          allTasks={tasks}
         />
         <TaskColumn
           title="In Progress"
           category="inProgress"
           tasks={tasks.filter((t) => t.category === "inProgress")}
+          setTasks={setTasks}
+          allTasks={tasks}
         />
         <TaskColumn
           title="Done"
           category="done"
           tasks={tasks.filter((t) => t.category === "done")}
+          setTasks={setTasks}
+          allTasks={tasks}
         />
       </motion.div>
     </DndContext>
