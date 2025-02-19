@@ -85,7 +85,7 @@ const AuthProvider = ({ children }) => {
       setUser(currentUser);
 
       //------------------------
-      console.log("State Captured -> ", currentUser?.email);
+      // console.log("State Captured -> ", currentUser?.email);
       if (currentUser?.email) {
         // setLoginMail(currentUser.email);
         const user = { email: currentUser.email };
@@ -95,7 +95,7 @@ const AuthProvider = ({ children }) => {
             withCredentials: true,
           })
           .then((res) => {
-            console.log("login token", res.data);
+            // console.log("login token", res.data);
             setLoading(false);
           });
       } else {

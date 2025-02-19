@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from "react";
 
 const TaskContext = createContext();
 
@@ -12,6 +12,7 @@ export const TaskProvider = ({ children }) => {
       message,
       timestamp: new Date().toISOString(),
     };
+    // console.log(activity);
     setActivityLog((prev) => [activity, ...prev].slice(0, 50)); // Keep last 50 activities
   };
 
@@ -21,6 +22,7 @@ export const TaskProvider = ({ children }) => {
       id: crypto.randomUUID(),
       timestamp: new Date().toISOString(),
     };
+    console.log(newTask);
     setTasks((prev) => [...prev, newTask]);
     addActivity(`Created task: ${task.title}`);
   };
@@ -48,7 +50,7 @@ export const TaskProvider = ({ children }) => {
 
       const result = [...tasksWithoutMoved];
       result.splice(targetIndex, 0, updatedTask);
-      
+
       addActivity(`Moved task "${taskToMove.title}" to ${newCategory}`);
       return result;
     });
@@ -58,25 +60,25 @@ export const TaskProvider = ({ children }) => {
     setTasks((prev) => {
       const categoryTasks = prev.filter((task) => task.category === category);
       const otherTasks = prev.filter((task) => task.category !== category);
-      
+
       const [movedTask] = categoryTasks.splice(startIndex, 1);
       categoryTasks.splice(endIndex, 0, movedTask);
-      
+
       addActivity(`Reordered task: ${movedTask.title}`);
       return [...otherTasks, ...categoryTasks];
     });
   };
 
   return (
-    <TaskContext.Provider 
-      value={{ 
-        tasks, 
+    <TaskContext.Provider
+      value={{
+        tasks,
         activityLog,
-        addTask, 
-        updateTask, 
-        deleteTask, 
-        moveTask, 
-        reorderTasks 
+        addTask,
+        updateTask,
+        deleteTask,
+        moveTask,
+        reorderTasks,
       }}
     >
       {children}
@@ -87,7 +89,7 @@ export const TaskProvider = ({ children }) => {
 export const useTaskContext = () => {
   const context = useContext(TaskContext);
   if (!context) {
-    throw new Error('useTaskContext must be used within a TaskProvider');
+    throw new Error("useTaskContext must be used within a TaskProvider");
   }
   return context;
 };

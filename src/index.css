@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* dark mode classes  */
+*,
+*::before,
+*::after {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 00ms !important;
+}
+:root {
+  --background: #f9fafb; /* Light mode background (gray-50) */
+  --text-color: #1f2937; /* Light mode text (gray-800) */
+}
+.dark {
+  --background: #111827; /* 🔥 Custom Dark Mode Background (gray-900) */
+  --text-color: #f9fafb; /* 🔥 Custom Dark Mode Text (gray-50) */
+}
+body {
+  background-color: var(--background);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
