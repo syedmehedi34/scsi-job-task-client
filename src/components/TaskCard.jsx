@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Pencil, Trash2, X, Check, GripVertical, Calendar } from "lucide-react";
 import { useTaskContext } from "../providers/TaskContext";
 import { motion } from "framer-motion";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 export const TaskCard = ({ task, index, isNew = false }) => {
   const { updateTask, deleteTask } = useTaskContext();
@@ -56,6 +57,26 @@ export const TaskCard = ({ task, index, isNew = false }) => {
   };
 
   const status = getDueDateStatus();
+  // ?
+  const handleDragEnd = (result) => {
+    console.log(result);
+
+    // if (!result.destination) return; // If dropped outside, do nothing
+    // const { source, destination } = result;
+    // // Find the dragged task
+    // const draggedTask = tasks[source.index];
+    // // Update the category of the dragged task
+    // const updatedTasks = tasks.map((task) =>
+    //   task.id === draggedTask.id
+    //     ? { ...task, category: destination.droppableId }
+    //     : task
+    // );
+    // setTasks(updatedTasks);
+    // // Log the new category name
+    // console.log("Dropped in category:", destination.droppableId); // ✅ Logs "todo" if moved to todo
+  };
+
+  // ?
 
   if (isEditing) {
     return (
@@ -111,57 +132,59 @@ export const TaskCard = ({ task, index, isNew = false }) => {
   }
 
   return (
-    <motion.div
-      draggable
-      onDragStart={handleDragStart}
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      className="group bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all cursor-move"
-    >
-      <div className="flex items-start gap-2">
-        <div className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400 cursor-grab active:cursor-grabbing mt-1">
-          <GripVertical size={16} />
-        </div>
-        <div className="flex-1">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-medium text-gray-800 dark:text-gray-200">
-              {task.title}
-            </h3>
-            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <button
-                onClick={() => setIsEditing(true)}
-                className="p-1.5 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
-              >
-                <Pencil size={14} />
-              </button>
-              <button
-                onClick={() => deleteTask(task.id)}
-                className="p-1.5 text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
-              >
-                <Trash2 size={14} />
-              </button>
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <motion.div
+        draggable
+        onDragStart={handleDragStart}
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="group bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 hover:shadow-md transition-all cursor-move"
+      >
+        <div className="flex items-start gap-2">
+          <div className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-400 cursor-grab active:cursor-grabbing mt-1">
+            <GripVertical size={16} />
+          </div>
+          <div className="flex-1">
+            <div className="flex justify-between items-start mb-2">
+              <h3 className="font-medium text-gray-800 dark:text-gray-200">
+                {task.title}
+              </h3>
+              <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="p-1.5 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+                >
+                  <Pencil size={14} />
+                </button>
+                <button
+                  onClick={() => deleteTask(task.id)}
+                  className="p-1.5 text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            </div>
+            {task.description && (
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                {task.description}
+              </p>
+            )}
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-gray-400 dark:text-gray-500">
+                {formatDate(task.timestamp)}
+              </p>
+              {task.dueDate && (
+                <div
+                  className={`flex items-center gap-1 text-xs ${dueDateClasses[status]}`}
+                >
+                  <Calendar size={12} />
+                  <span>{formatDate(task.dueDate)}</span>
+                </div>
+              )}
             </div>
           </div>
-          {task.description && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-              {task.description}
-            </p>
-          )}
-          <div className="flex items-center justify-between">
-            <p className="text-xs text-gray-400 dark:text-gray-500">
-              {formatDate(task.timestamp)}
-            </p>
-            {task.dueDate && (
-              <div
-                className={`flex items-center gap-1 text-xs ${dueDateClasses[status]}`}
-              >
-                <Calendar size={12} />
-                <span>{formatDate(task.dueDate)}</span>
-              </div>
-            )}
-          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </DragDropContext>
   );
 };

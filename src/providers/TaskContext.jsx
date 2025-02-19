@@ -22,7 +22,7 @@ export const TaskProvider = ({ children }) => {
       id: crypto.randomUUID(),
       timestamp: new Date().toISOString(),
     };
-    console.log(newTask);
+    // console.log(newTask);
     setTasks((prev) => [...prev, newTask]);
     addActivity(`Created task: ${task.title}`);
   };
