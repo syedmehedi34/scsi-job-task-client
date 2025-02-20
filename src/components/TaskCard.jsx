@@ -27,16 +27,27 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
   // handle click save
   // const handleClickSave = async (data) => {
   //   const newTask = {
-  //     id: editTask?.id || Date.now().toString(),
-  //     // id: Date.now().toString(),
+  //     id: editTask?.id || Date.now().toString(), // Generate a new id if it's a new task
   //     title: data.title,
   //     description: data.description,
   //     category,
   //     dueDate: data.dueDate,
   //   };
 
-  //   const updatedTasks = allTasks.filter((task) => task.title.trim() !== "");
-  //   updatedTasks.push(newTask);
+  //   // If we're editing a task, update it; if not, add a new task
+  //   let updatedTasks;
+
+  //   if (editTask) {
+  //     // Update the existing task
+  //     updatedTasks = allTasks.map((task) =>
+  //       task.id === newTask.id ? newTask : task
+  //     );
+  //   } else {
+  //     // Add the new task
+  //     updatedTasks = [...allTasks, newTask];
+  //   }
+
+  //   // Update the task list state
   //   setTasks(updatedTasks);
   //   setIsEditing(false);
   //   reset();
@@ -50,32 +61,59 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
   //   }
   // };
   const handleClickSave = async (data) => {
+    // If title is empty, do not save the task
+    if (!data.title.trim() || !data.description.trim()) {
+      return; // Simply return without making any changes if both title and description are empty
+    }
+
     const newTask = {
-      id: editTask?.id || Date.now().toString(),
+      id: editTask?.id || Date.now().toString(), // Generate a new id if it's a new task
       title: data.title,
       description: data.description,
       category,
       dueDate: data.dueDate,
     };
 
-    // If we're editing a task, replace the old one with the new one
-    const updatedTasks = allTasks.map((task) =>
-      task.id === newTask.id ? newTask : task
+    let updatedTasks;
+
+    if (editTask) {
+      // If we are editing, update the existing task
+      updatedTasks = allTasks.map((task) =>
+        task.id === newTask.id ? newTask : task
+      );
+    } else {
+      // If it's a new task, add it to the list
+      updatedTasks = [...allTasks, newTask];
+    }
+
+    // Filter out tasks that have empty title or description (if any)
+    updatedTasks = updatedTasks.filter(
+      (task) => task.title.trim() !== "" && task.description.trim() !== ""
     );
 
-    // Update the task list state
+    // Update the tasks state
     setTasks(updatedTasks);
-    setIsEditing(false);
+    setIsEditing(false); // Exit the editing state
+
+    // Reset the form state
     reset();
 
+    // Try to save the task to the backend
     try {
       const res = await axiosSecure.patch("/tasks", { newTask });
-      // console.log("Response:", res.data);
+      console.log("Response:", res.data);
     } catch (error) {
       console.error("Error saving task:", error);
-      // You can show a user-friendly message here
     }
   };
+
+  // handle edit task
+  const handleEditTask = (task) => {
+    setEdit(task);
+    // console.log(task);
+    setIsEditing(true);
+  };
+  //?
 
   // handle click cancel saving
   const handleCancelSaving = () => {
@@ -84,15 +122,6 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
     setIsEditing(false);
     reset();
   };
-
-  //?
-  const handleEditTask = (task) => {
-    setEdit(task);
-    // console.log(task);
-    setIsEditing(true);
-  };
-
-  //?
 
   if (isEditing) {
     return (
