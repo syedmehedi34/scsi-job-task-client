@@ -8,21 +8,26 @@ import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./providers/AuthProvider";
 import { ThemeProvider } from "./providers/ThemeContext";
 import { TaskProvider } from "./providers/TaskContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <TaskProvider>
-      <ThemeProvider>
-        <AuthProvider>
-          <RouterProvider
-            router={router}
-            future={{
-              v7_startTransition: true,
-            }}
-          />
-          <ToastContainer />
-        </AuthProvider>
-      </ThemeProvider>
-    </TaskProvider>
+    <QueryClientProvider client={queryClient}>
+      <TaskProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <RouterProvider
+              router={router}
+              future={{
+                v7_startTransition: true,
+              }}
+            />
+            <ToastContainer />
+          </AuthProvider>
+        </ThemeProvider>
+      </TaskProvider>
+    </QueryClientProvider>
   </StrictMode>
 );

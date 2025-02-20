@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import useTasks from "../hooks/useTasks";
 
 const TaskContext = createContext();
 
@@ -8,7 +9,15 @@ export const TaskProvider = ({ children }) => {
     { _id: "2", title: "Task 2", category: "inProgress" },
     { _id: "3", title: "Task 3", category: "done" },
   ];
-  const [tasks, setTasks] = useState(initialTasks);
+  //?
+  const [allTasks, loadingTasks, refetchTasks] = useTasks();
+  console.log(allTasks);
+  //?
+  const [tasks, setTasks] = useState(allTasks);
+  useEffect(() => {
+    setTasks(allTasks);
+  }, [allTasks]);
+  console.log(tasks);
 
   // const [isEditing, setIsEditing] = useState(false);
   // const handleAddTask = () => {

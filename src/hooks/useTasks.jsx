@@ -6,7 +6,7 @@ const useTasks = () => {
   const axiosSecure = useSecureAxios();
 
   const {
-    data: assets = [],
+    data: allTasks = [],
     isPending: loadingTasks,
     refetch: refetchTasks,
   } = useQuery({
@@ -17,7 +17,7 @@ const useTasks = () => {
     },
   });
 
-  return [assets, loadingTasks, refetchTasks];
+  return [allTasks, loadingTasks, refetchTasks];
 };
 
 export default useTasks;
