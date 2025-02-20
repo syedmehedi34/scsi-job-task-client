@@ -25,41 +25,6 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
   const { handleSubmit, register, reset } = useForm();
 
   // handle click save
-  // const handleClickSave = async (data) => {
-  //   const newTask = {
-  //     id: editTask?.id || Date.now().toString(), // Generate a new id if it's a new task
-  //     title: data.title,
-  //     description: data.description,
-  //     category,
-  //     dueDate: data.dueDate,
-  //   };
-
-  //   // If we're editing a task, update it; if not, add a new task
-  //   let updatedTasks;
-
-  //   if (editTask) {
-  //     // Update the existing task
-  //     updatedTasks = allTasks.map((task) =>
-  //       task.id === newTask.id ? newTask : task
-  //     );
-  //   } else {
-  //     // Add the new task
-  //     updatedTasks = [...allTasks, newTask];
-  //   }
-
-  //   // Update the task list state
-  //   setTasks(updatedTasks);
-  //   setIsEditing(false);
-  //   reset();
-
-  //   try {
-  //     const res = await axiosSecure.patch("/tasks", { newTask });
-  //     console.log("Response:", res.data);
-  //   } catch (error) {
-  //     console.error("Error saving task:", error);
-  //     // You can show a user-friendly message here
-  //   }
-  // };
   const handleClickSave = async (data) => {
     // If title is empty, do not save the task
     if (!data.title.trim() || !data.description.trim()) {
@@ -101,7 +66,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
     // Try to save the task to the backend
     try {
       const res = await axiosSecure.patch("/tasks", { newTask });
-      console.log("Response:", res.data);
+      // console.log("Response:", res.data);
     } catch (error) {
       console.error("Error saving task:", error);
     }
@@ -113,7 +78,6 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
     // console.log(task);
     setIsEditing(true);
   };
-  //?
 
   // handle click cancel saving
   const handleCancelSaving = () => {
@@ -123,6 +87,21 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
     reset();
   };
 
+  //? handle delete task
+  const handleDelete = async (taskId) => {
+    // Update the tasks state locally
+    const updatedTasks = allTasks.filter((task) => task.id !== taskId);
+    setTasks(updatedTasks);
+
+    // console.log("Task ID to delete:", taskId);
+
+    const res = await axiosSecure.delete("/tasks", { data: { taskId } });
+    // console.log("Deleted task:", res.data);
+  };
+
+  //
+  //
+  //
   if (isEditing) {
     return (
       <motion.div
@@ -211,7 +190,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
         </button>
 
         <button
-          // onClick={() => deleteTask(task.id)}
+          onClick={() => handleDelete(task.id)}
           className="p-1.5 text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
         >
           <Trash2 size={14} />

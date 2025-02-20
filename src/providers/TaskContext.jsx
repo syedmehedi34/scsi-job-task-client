@@ -7,6 +7,7 @@ const TaskContext = createContext();
 export const TaskProvider = ({ children }) => {
   const [allTasks, loadingTasks, refetchTasks] = useTasks();
   // console.log(allTasks);
+
   const [tasks, setTasks] = useState(allTasks);
   useEffect(() => {
     setTasks(allTasks);
