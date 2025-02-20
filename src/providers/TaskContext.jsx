@@ -29,10 +29,10 @@ export const TaskProvider = ({ children }) => {
         task.id === taskId ? { ...task, category: newCategory } : task
       )
     );
-    console.log("Dropped in section:", newCategory);
+    // console.log("Dropped in section:", newCategory);
 
     // Send the update request to the backend
-    const res = await axiosSecure.patch("/tasks", { taskId, newCategory });
+    const res = await axiosSecure.patch("/drag_tasks", { taskId, newCategory });
     // if (res.status === 200) {
     //   console.log("Task updated successfully:", res.data);
     // } else {
