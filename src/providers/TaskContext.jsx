@@ -11,7 +11,6 @@ export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState(initialTasks);
 
   // const [isEditing, setIsEditing] = useState(false);
-
   // const handleAddTask = () => {
   //   const newTask = {
   //     id: Date.now().toString(),

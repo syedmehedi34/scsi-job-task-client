@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { TaskCard } from "./TaskCard";
 import { Plus, ListTodo, Timer, CheckCircle2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useDroppable } from "@dnd-kit/core";
-import { useTaskContext } from "../providers/TaskContext";
+import { useForm } from "react-hook-form";
 
 export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
   const { setNodeRef } = useDroppable({ id: category });
@@ -13,8 +13,9 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
     Done: <CheckCircle2 className="mr-2 text-green-500" size={20} />,
   };
 
+  const { handleSubmit, register, reset } = useForm();
+
   // ?  Handle adding a new task
-  // const { handleAddTask } = useTaskContext();
   const handleAddTask = () => {
     const newTask = {
       id: Date.now().toString(),
@@ -25,6 +26,22 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
     console.log(newTask);
 
     setTasks([...allTasks, newTask]);
+  };
+
+  // ? Handle form submission
+  const handleClickSave = (data) => {
+    console.log("Save task", data);
+    const newTask = {
+      id: Date.now().toString(),
+      title: data.title,
+      description: data.description,
+      category,
+    };
+    console.log(newTask);
+
+    // todo: save the value to the database
+
+    reset(); // Clear form fields after saving
   };
 
   return (
@@ -54,7 +71,14 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
       {tasks
         .filter((task) => task.category === category)
         .map((task) => (
-          <TaskCard key={task.id} task={task} isNew={task.title === ""} />
+          <TaskCard
+            key={task.id}
+            task={task}
+            isNew={task.title === ""}
+            register={register}
+            handleSubmit={handleSubmit}
+            handleClickSave={handleClickSave}
+          />
         ))}
     </motion.div>
   );
