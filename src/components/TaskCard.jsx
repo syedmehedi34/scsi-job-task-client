@@ -25,25 +25,52 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
   const { handleSubmit, register, reset } = useForm();
 
   // handle click save
+  // const handleClickSave = async (data) => {
+  //   const newTask = {
+  //     id: editTask?.id || Date.now().toString(),
+  //     // id: Date.now().toString(),
+  //     title: data.title,
+  //     description: data.description,
+  //     category,
+  //     dueDate: data.dueDate,
+  //   };
+
+  //   const updatedTasks = allTasks.filter((task) => task.title.trim() !== "");
+  //   updatedTasks.push(newTask);
+  //   setTasks(updatedTasks);
+  //   setIsEditing(false);
+  //   reset();
+
+  //   try {
+  //     const res = await axiosSecure.patch("/tasks", { newTask });
+  //     console.log("Response:", res.data);
+  //   } catch (error) {
+  //     console.error("Error saving task:", error);
+  //     // You can show a user-friendly message here
+  //   }
+  // };
   const handleClickSave = async (data) => {
     const newTask = {
       id: editTask?.id || Date.now().toString(),
-      // id: Date.now().toString(),
       title: data.title,
       description: data.description,
       category,
       dueDate: data.dueDate,
     };
 
-    const updatedTasks = allTasks.filter((task) => task.title.trim() !== "");
-    updatedTasks.push(newTask);
+    // If we're editing a task, replace the old one with the new one
+    const updatedTasks = allTasks.map((task) =>
+      task.id === newTask.id ? newTask : task
+    );
+
+    // Update the task list state
     setTasks(updatedTasks);
     setIsEditing(false);
     reset();
 
     try {
       const res = await axiosSecure.patch("/tasks", { newTask });
-      console.log("Response:", res.data);
+      // console.log("Response:", res.data);
     } catch (error) {
       console.error("Error saving task:", error);
       // You can show a user-friendly message here
