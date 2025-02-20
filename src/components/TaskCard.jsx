@@ -1,9 +1,10 @@
 import { useDraggable } from "@dnd-kit/core";
 import { motion } from "framer-motion";
 import { Check, Pencil, Trash2, X } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import useSecureAxios from "../hooks/useSecureAxios";
+import { AuthContext } from "../providers/AuthProvider";
 
 export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -11,6 +12,9 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
     data: { task },
   });
   const [editTask, setEdit] = useState(null);
+  const { user, logOut } = useContext(AuthContext);
+  const email = user?.email;
+  // console.log(email);
 
   const axiosSecure = useSecureAxios();
   const style = transform
@@ -37,6 +41,8 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
       description: data.description,
       category,
       dueDate: data.dueDate,
+      createdTime: new Date().toLocaleDateString("sv-SE"),
+      user: email,
     };
 
     let updatedTasks;
@@ -87,7 +93,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
     reset();
   };
 
-  //? handle delete task
+  // handle delete task
   const handleDelete = async (taskId) => {
     // Update the tasks state locally
     const updatedTasks = allTasks.filter((task) => task.id !== taskId);
@@ -158,44 +164,56 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
   }
 
   return (
-    <div className="group relative z-50">
-      <div
-        ref={setNodeRef}
-        {...listeners}
-        {...attributes}
-        style={style}
-        className=" p-3 mb-2 bg-white rounded shadow border border-white cursor-grab hover:shadow-lg transition-all group"
-      >
-        <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>
-        <p className="font-light mt-2 mb-8 text-sm">{task.description}</p>
+    <div className="group">
+      <div className="relative">
+        <div
+          ref={setNodeRef}
+          {...listeners}
+          {...attributes}
+          style={style}
+          className={`p-3 mb-2 bg-white rounded shadow border border-white cursor-grab hover:shadow-lg transition-all group`}
+        >
+          <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>
+          <p className="font-light mt-2 mb-8 text-sm">{task.description}</p>
 
-        <div className="flex justify-between items-center">
-          <p className="text-sm font-extralight text-gray-500">
-            Due: {task.dueDate}
-          </p>
-          <p className="text-sm font-extralight text-gray-500">
-            Due: {task.dueDate}
-          </p>
+          <div className="flex justify-between items-center">
+            <p className="text-sm font-extralight text-gray-500">
+              Created: {task?.createdTime}
+            </p>
+            <p
+              className={`text-sm font-extralight text-gray-500 ${
+                new Date(task?.dueDate) < new Date(task?.createdTime) &&
+                task?.category !== "done"
+                  ? "text-red-500"
+                  : ""
+              }`}
+            >
+              Due: {task?.dueDate}
+            </p>
+          </div>
+
+          {/* Edit and Delete Buttons */}
         </div>
 
-        {/* Edit and Delete Buttons */}
-      </div>
+        <div className=" absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity ">
+          <button
+            onClick={() => handleEditTask(task)}
+            className="p-1.5 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+          >
+            <Pencil size={14} />
+          </button>
 
-      <div className=" absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity ">
-        <button
-          onClick={() => handleEditTask(task)}
-          className="p-1.5 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
-        >
-          <Pencil size={14} />
-        </button>
-
-        <button
-          onClick={() => handleDelete(task.id)}
-          className="p-1.5 text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
-        >
-          <Trash2 size={14} />
-        </button>
+          <button
+            onClick={() => handleDelete(task.id)}
+            className="p-1.5 text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+          >
+            <Trash2 size={14} />
+          </button>
+        </div>
       </div>
     </div>
   );
 };
+
+// mehedi@SCSI_123
+// mehedi@scsi.com

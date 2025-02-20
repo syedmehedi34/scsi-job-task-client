@@ -14,10 +14,10 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <TaskProvider>
-        <ThemeProvider>
-          <AuthProvider>
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <TaskProvider>
+          <ThemeProvider>
             <RouterProvider
               router={router}
               future={{
@@ -25,9 +25,9 @@ createRoot(document.getElementById("root")).render(
               }}
             />
             <ToastContainer />
-          </AuthProvider>
-        </ThemeProvider>
-      </TaskProvider>
-    </QueryClientProvider>
+          </ThemeProvider>
+        </TaskProvider>
+      </QueryClientProvider>
+    </AuthProvider>
   </StrictMode>
 );

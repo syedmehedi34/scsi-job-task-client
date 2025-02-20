@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import useTasks from "../hooks/useTasks";
 import useSecureAxios from "../hooks/useSecureAxios";
+// import { AuthContext } from "./AuthProvider";
 
 const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
   const [allTasks, loadingTasks, refetchTasks] = useTasks();
-  // console.log(allTasks);
 
   const [tasks, setTasks] = useState(allTasks);
   useEffect(() => {
@@ -14,6 +14,9 @@ export const TaskProvider = ({ children }) => {
     refetchTasks();
   }, [allTasks]);
   // console.log(tasks);
+  // const { user } = useContext(AuthContext);
+  // const email = user?.email;
+  // console.log(email);
 
   // drag control
   const axiosSecure = useSecureAxios();
@@ -34,7 +37,10 @@ export const TaskProvider = ({ children }) => {
     // console.log("Dropped in section:", newCategory);
 
     // Send the update request to the backend
-    const res = await axiosSecure.patch("/drag_tasks", { taskId, newCategory });
+    const res = await axiosSecure.patch("/drag_tasks", {
+      taskId,
+      newCategory,
+    });
     // if (res.status === 200) {
     //   console.log("Task updated successfully:", res.data);
     // } else {

@@ -2,28 +2,29 @@ import { useState } from "react";
 import {
   DndContext,
   closestCenter,
-  useDraggable,
   useDroppable,
+  useDraggable,
+  DragOverlay,
 } from "@dnd-kit/core";
+import { rectSortingStrategy } from "@dnd-kit/sortable";
+import { SortableContext, useSortable, arrayMove } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 const initialTasks = [
   { id: "1", title: "Task 1", category: "todo" },
   { id: "2", title: "Task 2", category: "todo" },
   { id: "3", title: "Task 3", category: "progressing" },
+  { id: "4", title: "Task 4", category: "progressing" },
 ];
 
-// Draggable Card Component
-const DraggableCard = ({ task }) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: task.id,
-    data: { task },
-  });
+// Sortable Draggable Card Component
+const SortableTask = ({ task }) => {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: task.id });
 
   const style = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
-      : "none",
-    transition: transform ? "none" : "transform 0.2s ease-in-out",
+    transform: CSS.Transform.toString(transform),
+    transition,
   };
 
   return (
@@ -34,8 +35,7 @@ const DraggableCard = ({ task }) => {
       style={style}
       className="p-3 mb-2 bg-white rounded shadow cursor-grab"
     >
-      {task.title} <br />
-      <span className="text-xs text-gray-500">({task.category})</span>
+      {task.title}
     </div>
   );
 };
@@ -50,16 +50,16 @@ const DroppableSection = ({ category, tasks }) => {
       className="w-1/2 p-4 border rounded-lg bg-gray-100 min-h-[200px]"
     >
       <h2 className="text-lg font-bold mb-4">{category}</h2>
-      {tasks
-        .filter((task) => task.category === category)
-        .map((task) => (
-          <DraggableCard key={task.id} task={task} />
+      <SortableContext items={tasks} strategy={rectSortingStrategy}>
+        {tasks.map((task) => (
+          <SortableTask key={task.id} task={task} />
         ))}
+      </SortableContext>
     </div>
   );
 };
 
-// Main Board Component
+// Main Drag & Drop Board
 const DragDropBoard = () => {
   const [tasks, setTasks] = useState(initialTasks);
 
@@ -68,22 +68,51 @@ const DragDropBoard = () => {
     if (!over) return;
 
     const draggedTaskId = active.id;
+    const sourceTask = tasks.find((task) => task.id === draggedTaskId);
     const newCategory = over.id;
 
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === draggedTaskId ? { ...task, category: newCategory } : task
-      )
-    );
+    if (!sourceTask) return;
 
-    console.log("Dropped in section:", newCategory);
+    if (sourceTask.category !== newCategory) {
+      // Moving to a new category
+      setTasks((prevTasks) =>
+        prevTasks.map((task) =>
+          task.id === draggedTaskId ? { ...task, category: newCategory } : task
+        )
+      );
+    } else {
+      // Reordering within the same category
+      const filteredTasks = tasks.filter(
+        (task) => task.category === newCategory
+      );
+      const oldIndex = filteredTasks.findIndex(
+        (task) => task.id === draggedTaskId
+      );
+      const newIndex = filteredTasks.findIndex((task) => task.id === over.id);
+
+      setTasks((prevTasks) => {
+        const newTasks = [...prevTasks];
+        const categoryTasks = arrayMove(filteredTasks, oldIndex, newIndex);
+        categoryTasks.forEach((task, i) => {
+          const index = newTasks.findIndex((t) => t.id === task.id);
+          newTasks[index] = task;
+        });
+        return newTasks;
+      });
+    }
   };
 
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <div className="flex gap-6 p-4">
-        <DroppableSection category="todo" tasks={tasks} />
-        <DroppableSection category="progressing" tasks={tasks} />
+        <DroppableSection
+          category="todo"
+          tasks={tasks.filter((task) => task.category === "todo")}
+        />
+        <DroppableSection
+          category="progressing"
+          tasks={tasks.filter((task) => task.category === "progressing")}
+        />
       </div>
     </DndContext>
   );

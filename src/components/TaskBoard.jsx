@@ -5,7 +5,6 @@ import { DndContext, closestCenter } from "@dnd-kit/core";
 import { useTaskContext } from "../providers/TaskContext";
 
 export const TaskBoard = () => {
-  // const [tasks, setTasks] = useState(initialTasks);
   const { tasks, setTasks, handleAddTask, handleDragEnd } = useTaskContext();
 
   return (
