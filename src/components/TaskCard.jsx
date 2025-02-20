@@ -10,6 +10,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
     id: task.id,
     data: { task },
   });
+  const [editTask, setEdit] = useState(null);
 
   const axiosSecure = useSecureAxios();
   const style = transform
@@ -26,7 +27,8 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
   // handle click save
   const handleClickSave = async (data) => {
     const newTask = {
-      id: Date.now().toString(),
+      id: editTask?.id || Date.now().toString(),
+      // id: Date.now().toString(),
       title: data.title,
       description: data.description,
       category,
@@ -58,8 +60,9 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
 
   //?
   const handleEditTask = (task) => {
-    console.log(task); // Log to make sure task is passed properly
-    setIsEditing(true); // This will trigger the edit form to show up
+    setEdit(task);
+    // console.log(task);
+    setIsEditing(true);
   };
 
   //?
@@ -79,6 +82,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
             className="w-full mb-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 transition-all"
             maxLength={50}
             placeholder="Task title"
+            defaultValue={editTask?.title}
             autoFocus
           />
           <textarea
@@ -86,12 +90,14 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
             className="w-full mb-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 transition-all resize-none"
             maxLength={200}
             placeholder="Description (optional)"
+            defaultValue={editTask?.description}
             rows={3}
           />
 
           {/* Due Date */}
           <input
             type="date"
+            defaultValue={editTask?.dueDate}
             {...register("dueDate")}
             className="w-full mb-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 transition-all"
           />
@@ -117,7 +123,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
   }
 
   return (
-    <div className="group relative">
+    <div className="group relative z-50">
       <div
         ref={setNodeRef}
         {...listeners}

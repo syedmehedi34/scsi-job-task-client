@@ -10,6 +10,7 @@ export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState(allTasks);
   useEffect(() => {
     setTasks(allTasks);
+    refetchTasks();
   }, [allTasks]);
   // console.log(tasks);
 
