@@ -1,32 +1,29 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import useTasks from "../hooks/useTasks";
+import useSecureAxios from "../hooks/useSecureAxios";
 
 const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
-  const initialTasks = [
-    { id: "1", title: "Task 1", category: "todo" },
-    { id: "2", title: "Task 2", category: "inProgress" },
-    { id: "3", title: "Task 3", category: "done" },
-  ];
-  //?
   const [allTasks, loadingTasks, refetchTasks] = useTasks();
-  console.log(allTasks);
-  //?
+  // console.log(allTasks);
   const [tasks, setTasks] = useState(allTasks);
   useEffect(() => {
     setTasks(allTasks);
   }, [allTasks]);
-  console.log(tasks);
+  // console.log(tasks);
 
-  const handleDragEnd = (event) => {
+  // drag control
+  const axiosSecure = useSecureAxios();
+
+  const handleDragEnd = async (event) => {
     const { active, over } = event;
     if (!over) return;
 
     const taskId = active.id;
     const newCategory = over.id;
 
-    // Ensure we're dropping into a different category
+    // Optimistically update the UI
     setTasks((prevTasks) =>
       prevTasks.map((task) =>
         task.id === taskId ? { ...task, category: newCategory } : task
@@ -34,17 +31,20 @@ export const TaskProvider = ({ children }) => {
     );
     console.log("Dropped in section:", newCategory);
 
-    // todo - update the task in the database
+    // Send the update request to the backend
+    const res = await axiosSecure.patch("/tasks", { taskId, newCategory });
+    // if (res.status === 200) {
+    //   console.log("Task updated successfully:", res.data);
+    // } else {
+    //   console.error("Failed to update task:", res.data);
+    // }
   };
 
   return (
     <TaskContext.Provider
       value={{
-        // isEditing,
-        // setIsEditing,
         tasks,
         setTasks,
-        // handleAddTask,
         handleDragEnd,
       }}
     >
