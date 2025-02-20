@@ -13,7 +13,7 @@ export const TaskCard = ({
   setTasks,
 }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: task.id,
+    _id: task._id,
     data: { task },
   });
 
@@ -30,15 +30,16 @@ export const TaskCard = ({
 
   const handleClickSave = (data) => {
     const newTask = {
-      id: Date.now().toString(),
+      _id: Date.now().toString(),
       title: data.title,
       description: data.description,
       category,
-      dueDate: data.dueDate, // Add due date to new task
+      dueDate: data.dueDate,
     };
 
     const updatedTasks = allTasks.filter((task) => task.title.trim() !== "");
     updatedTasks.push(newTask);
+    console.log(newTask);
     setTasks(updatedTasks);
     setIsEditing(false);
     reset();

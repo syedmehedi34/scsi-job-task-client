@@ -18,31 +18,15 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
   // ?  Handle adding a new task
   const handleAddTask = () => {
     const newTask = {
-      id: Date.now().toString(),
+      _id: Date.now().toString(),
       title: "",
       description: "",
       category,
     };
-    console.log(newTask);
+    // console.log(newTask);
 
     setTasks([...allTasks, newTask]);
   };
-
-  // // ? Handle form submission
-  // const handleClickSave = (data) => {
-  //   console.log("Save task", data);
-  //   const newTask = {
-  //     id: Date.now().toString(),
-  //     title: data.title,
-  //     description: data.description,
-  //     category,
-  //   };
-  //   console.log(newTask);
-
-  //   // todo: save the value to the database
-
-  //   // reset();
-  // };
 
   return (
     <motion.div
@@ -72,7 +56,7 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
         .filter((task) => task.category === category)
         .map((task) => (
           <TaskCard
-            key={task.id}
+            key={task._id}
             task={task}
             allTasks={allTasks}
             isNew={task.title === ""}
