@@ -2,31 +2,17 @@ import React, { useState } from "react";
 import { TaskColumn } from "./TaskColumn";
 import { motion } from "framer-motion";
 import { DndContext, closestCenter } from "@dnd-kit/core";
+import { useTaskContext } from "../providers/TaskContext";
 
-const initialTasks = [
-  { id: "1", title: "Task 1", category: "todo" },
-  { id: "2", title: "Task 2", category: "inProgress" },
-  { id: "3", title: "Task 3", category: "done" },
-];
+// const initialTasks = [
+//   { id: "1", title: "Task 1", category: "todo" },
+//   { id: "2", title: "Task 2", category: "inProgress" },
+//   { id: "3", title: "Task 3", category: "done" },
+// ];
 
 export const TaskBoard = () => {
-  const [tasks, setTasks] = useState(initialTasks);
-
-  const handleDragEnd = (event) => {
-    const { active, over } = event;
-    if (!over) return;
-
-    const taskId = active.id;
-    const newCategory = over.id;
-
-    // Ensure we're dropping into a different category
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === taskId ? { ...task, category: newCategory } : task
-      )
-    );
-    console.log("Dropped in section:", newCategory);
-  };
+  // const [tasks, setTasks] = useState(initialTasks);
+  const { tasks, setTasks, handleAddTask, handleDragEnd } = useTaskContext();
 
   return (
     <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>

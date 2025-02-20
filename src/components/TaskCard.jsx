@@ -1,6 +1,10 @@
 import { useDraggable } from "@dnd-kit/core";
+import { motion } from "framer-motion";
+import { Check, X } from "lucide-react";
+import { useState } from "react";
+// import { useTaskContext } from "../providers/TaskContext";
 
-export const TaskCard = ({ task }) => {
+export const TaskCard = ({ task, isNew }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task.id,
     data: { task },
@@ -12,6 +16,67 @@ export const TaskCard = ({ task }) => {
         zIndex: 999,
       }
     : {};
+
+  //? editing mode
+  // const { isEditing, setIsEditing } = useTaskContext();
+  const [isEditing, setIsEditing] = useState(isNew);
+  // console.log(isNew);
+  const [editedTitle, setEditedTitle] = useState(task.title);
+  const [editedDescription, setEditedDescription] = useState(task.description);
+
+  if (isEditing) {
+    return (
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 transition-all"
+      >
+        <input
+          type="text"
+          value={editedTitle}
+          onChange={(e) => setEditedTitle(e.target.value)}
+          className="w-full mb-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 transition-all"
+          maxLength={50}
+          placeholder="Task title"
+          autoFocus
+        />
+        <textarea
+          value={editedDescription}
+          onChange={(e) => setEditedDescription(e.target.value)}
+          className="w-full mb-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 transition-all resize-none"
+          maxLength={200}
+          placeholder="Description (optional)"
+          rows={3}
+        />
+        <div className="mb-3">
+          <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
+            Due Date
+          </label>
+          <input
+            type="datetime-local"
+            // value={editedDueDate}
+            // onChange={(e) => setEditedDueDate(e.target.value)}
+            className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+          />
+        </div>
+        <div className="flex justify-end gap-2">
+          <button
+            onClick={() => setIsEditing(false)}
+            className="p-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+          >
+            <X size={16} />
+          </button>
+          <button
+            // onClick={handleSave}
+            className="p-2 text-green-600 hover:text-green-800 dark:text-green-500 dark:hover:text-green-400 rounded-full hover:bg-green-50 dark:hover:bg-green-900/20 transition-all"
+          >
+            <Check size={16} />
+          </button>
+        </div>
+      </motion.div>
+    );
+  }
+  //?
 
   return (
     <div

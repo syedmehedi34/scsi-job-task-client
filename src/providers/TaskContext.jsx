@@ -3,82 +3,53 @@ import React, { createContext, useContext, useState } from "react";
 const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
-  const [tasks, setTasks] = useState([]);
-  const [activityLog, setActivityLog] = useState([]);
+  const initialTasks = [
+    { id: "1", title: "Task 1", category: "todo" },
+    { id: "2", title: "Task 2", category: "inProgress" },
+    { id: "3", title: "Task 3", category: "done" },
+  ];
+  const [tasks, setTasks] = useState(initialTasks);
 
-  const addActivity = (message) => {
-    const activity = {
-      id: crypto.randomUUID(),
-      message,
-      timestamp: new Date().toISOString(),
-    };
-    // console.log(activity);
-    setActivityLog((prev) => [activity, ...prev].slice(0, 50)); // Keep last 50 activities
-  };
+  // const [isEditing, setIsEditing] = useState(false);
 
-  const addTask = (task) => {
-    const newTask = {
-      ...task,
-      id: crypto.randomUUID(),
-      timestamp: new Date().toISOString(),
-    };
-    // console.log(newTask);
-    setTasks((prev) => [...prev, newTask]);
-    addActivity(`Created task: ${task.title}`);
-  };
+  // const handleAddTask = () => {
+  //   const newTask = {
+  //     id: Date.now().toString(),
+  //     title: "",
+  //     description: "",
+  //     category,
+  //   };
+  //   console.log(newTask);
 
-  const updateTask = (updatedTask) => {
-    setTasks((prev) =>
-      prev.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+  //   // Update the task list by adding the new task
+  //   setTasks([...tasks, newTask]); // Add the new task to the existing task list
+  // };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const taskId = active.id;
+    const newCategory = over.id;
+
+    // Ensure we're dropping into a different category
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, category: newCategory } : task
+      )
     );
-    addActivity(`Updated task: ${updatedTask.title}`);
-  };
-
-  const deleteTask = (id) => {
-    const task = tasks.find((t) => t.id === id);
-    setTasks((prev) => prev.filter((task) => task.id !== id));
-    addActivity(`Deleted task: ${task.title}`);
-  };
-
-  const moveTask = (taskId, newCategory, targetIndex) => {
-    setTasks((prev) => {
-      const taskToMove = prev.find((t) => t.id === taskId);
-      if (!taskToMove) return prev;
-
-      const tasksWithoutMoved = prev.filter((t) => t.id !== taskId);
-      const updatedTask = { ...taskToMove, category: newCategory };
-
-      const result = [...tasksWithoutMoved];
-      result.splice(targetIndex, 0, updatedTask);
-
-      addActivity(`Moved task "${taskToMove.title}" to ${newCategory}`);
-      return result;
-    });
-  };
-
-  const reorderTasks = (category, startIndex, endIndex) => {
-    setTasks((prev) => {
-      const categoryTasks = prev.filter((task) => task.category === category);
-      const otherTasks = prev.filter((task) => task.category !== category);
-
-      const [movedTask] = categoryTasks.splice(startIndex, 1);
-      categoryTasks.splice(endIndex, 0, movedTask);
-
-      addActivity(`Reordered task: ${movedTask.title}`);
-      return [...otherTasks, ...categoryTasks];
-    });
+    console.log("Dropped in section:", newCategory);
   };
 
   return (
     <TaskContext.Provider
       value={{
+        // isEditing,
+        // setIsEditing,
         tasks,
-        activityLog,
-        addTask,
-        updateTask,
-        deleteTask,
-        moveTask,
-        reorderTasks,
+        setTasks,
+        // handleAddTask,
+        handleDragEnd,
       }}
     >
       {children}
