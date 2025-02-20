@@ -9,6 +9,7 @@ export const TaskCard = ({
   isNew,
   category,
   tasks,
+  allTasks,
   setTasks,
   // register,
   // handleSubmit,
@@ -34,21 +35,45 @@ export const TaskCard = ({
   // ? Handle form submission
   const { handleSubmit, register, reset } = useForm();
 
+  // const handleClickSave = (data) => {
+  //   // console.log("Save task", data);
+  //   const newTask = {
+  //     id: Date.now().toString(),
+  //     title: data.title,
+  //     description: data.description,
+  //     category,
+  //   };
+  //   // console.log(newTask);
+  //   setTasks([...tasks, newTask]);
+  //   setIsEditing(false);
+  //   reset();
+  //   // console.log(tasks);
+  //   // console.log(newTask);
+
+  //   // todo: save the value to the database
+  // };
   const handleClickSave = (data) => {
-    console.log("Save task", data);
     const newTask = {
       id: Date.now().toString(),
       title: data.title,
       description: data.description,
       category,
     };
-    console.log(newTask);
-    setTasks([...tasks, newTask]);
-    setIsEditing(false);
-    // reset();
 
-    // todo: save the value to the database
+    const updatedTasks = allTasks.filter((task) => task.title.trim() !== "");
+    console.log(updatedTasks);
+
+    // Add the new task
+    updatedTasks.push(newTask);
+
+    // Update the state with the filtered tasks and the new task
+    setTasks(updatedTasks);
+
+    setIsEditing(false);
+    reset();
   };
+
+  // console.log(tasks);
 
   if (isEditing) {
     return (

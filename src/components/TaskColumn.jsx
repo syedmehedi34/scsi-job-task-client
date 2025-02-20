@@ -74,6 +74,7 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
           <TaskCard
             key={task.id}
             task={task}
+            allTasks={allTasks}
             isNew={task.title === ""}
             category={category}
             tasks={tasks}
