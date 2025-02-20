@@ -171,20 +171,24 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
           {...listeners}
           {...attributes}
           style={style}
-          className={`p-3 mb-2 bg-white rounded shadow border border-white cursor-grab hover:shadow-lg transition-all group`}
+          className={`p-3 mb-2 bg-white dark:bg-gray-700 dark:border-gray-600 rounded shadow border border-white cursor-grab hover:shadow-lg transition-all group`}
         >
-          <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>
-          <p className="font-light mt-2 mb-8 text-sm">{task.description}</p>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-50/80">
+            {task.title}
+          </h3>
+          <p className="font-light mt-2 mb-8 text-sm dark:text-gray-50/80">
+            {task.description}
+          </p>
 
           <div className="flex justify-between items-center">
-            <p className="text-sm font-extralight text-gray-500">
+            <p className="text-sm font-extralight text-gray-500 dark:text-gray-50/70">
               Created: {task?.createdTime}
             </p>
             <p
-              className={`text-sm font-extralight text-gray-500 ${
+              className={`text-sm font-extralight text-gray-500  dark:text-gray-50/70 ${
                 new Date(task?.dueDate) < new Date(task?.createdTime) &&
                 task?.category !== "done"
-                  ? "text-red-500"
+                  ? "text-red-500 dark:text-red-400"
                   : ""
               }`}
             >
@@ -198,7 +202,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
         <div className=" absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity ">
           <button
             onClick={() => handleEditTask(task)}
-            className="p-1.5 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
+            className="p-1.5 text-gray-600 hover:text-gray-800  dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
           >
             <Pencil size={14} />
           </button>

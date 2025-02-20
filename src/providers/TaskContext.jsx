@@ -7,20 +7,15 @@ const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
   const [allTasks, loadingTasks, refetchTasks] = useTasks();
+  const axiosSecure = useSecureAxios();
 
   const [tasks, setTasks] = useState(allTasks);
   useEffect(() => {
     setTasks(allTasks);
-    refetchTasks();
+    // refetchTasks();
   }, [allTasks]);
-  // console.log(tasks);
-  // const { user } = useContext(AuthContext);
-  // const email = user?.email;
-  // console.log(email);
 
   // drag control
-  const axiosSecure = useSecureAxios();
-
   const handleDragEnd = async (event) => {
     const { active, over } = event;
     if (!over) return;
@@ -41,11 +36,6 @@ export const TaskProvider = ({ children }) => {
       taskId,
       newCategory,
     });
-    // if (res.status === 200) {
-    //   console.log("Task updated successfully:", res.data);
-    // } else {
-    //   console.error("Failed to update task:", res.data);
-    // }
   };
 
   return (

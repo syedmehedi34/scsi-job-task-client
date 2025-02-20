@@ -33,7 +33,7 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
       ref={setNodeRef}
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="bg-gray-50/50 p-4 rounded-xl shadow-sm border border-gray-200/50 min-h-[500px] w-full"
+      className="bg-gray-50/50 dark:bg-gray-800 dark:border-gray-700  p-4 rounded-xl shadow-sm border border-gray-200/50 min-h-[500px] w-full"
     >
       <div className="flex items-center justify-between">
         <div className="text-lg font-bold mb-4 flex items-center">
@@ -63,9 +63,6 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
             category={category}
             tasks={tasks}
             setTasks={setTasks}
-            // register={register}
-            // handleSubmit={handleSubmit}
-            // handleClickSave={handleClickSave}
           />
         ))}
     </motion.div>
