@@ -28,21 +28,21 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
     setTasks([...allTasks, newTask]);
   };
 
-  // ? Handle form submission
-  const handleClickSave = (data) => {
-    console.log("Save task", data);
-    const newTask = {
-      id: Date.now().toString(),
-      title: data.title,
-      description: data.description,
-      category,
-    };
-    console.log(newTask);
+  // // ? Handle form submission
+  // const handleClickSave = (data) => {
+  //   console.log("Save task", data);
+  //   const newTask = {
+  //     id: Date.now().toString(),
+  //     title: data.title,
+  //     description: data.description,
+  //     category,
+  //   };
+  //   console.log(newTask);
 
-    // todo: save the value to the database
+  //   // todo: save the value to the database
 
-    reset(); // Clear form fields after saving
-  };
+  //   // reset();
+  // };
 
   return (
     <motion.div
@@ -75,9 +75,12 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
             key={task.id}
             task={task}
             isNew={task.title === ""}
-            register={register}
-            handleSubmit={handleSubmit}
-            handleClickSave={handleClickSave}
+            category={category}
+            tasks={tasks}
+            setTasks={setTasks}
+            // register={register}
+            // handleSubmit={handleSubmit}
+            // handleClickSave={handleClickSave}
           />
         ))}
     </motion.div>

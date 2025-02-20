@@ -2,13 +2,17 @@ import { useDraggable } from "@dnd-kit/core";
 import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export const TaskCard = ({
   task,
   isNew,
-  register,
-  handleSubmit,
-  handleClickSave,
+  category,
+  tasks,
+  setTasks,
+  // register,
+  // handleSubmit,
+  // handleClickSave,
 }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task.id,
@@ -23,7 +27,28 @@ export const TaskCard = ({
     : {};
 
   //? editing mode
+
   const [isEditing, setIsEditing] = useState(isNew);
+  // console.log(isEditing);
+
+  // ? Handle form submission
+  const { handleSubmit, register, reset } = useForm();
+
+  const handleClickSave = (data) => {
+    console.log("Save task", data);
+    const newTask = {
+      id: Date.now().toString(),
+      title: data.title,
+      description: data.description,
+      category,
+    };
+    console.log(newTask);
+    setTasks([...tasks, newTask]);
+    setIsEditing(false);
+    // reset();
+
+    // todo: save the value to the database
+  };
 
   if (isEditing) {
     return (
@@ -79,6 +104,7 @@ export const TaskCard = ({
       className="p-3 mb-2 bg-white rounded shadow border cursor-grab hover:shadow-lg transition-all"
     >
       <h3 className="font-medium text-gray-800">{task.title}</h3>
+      {/* <p className=" ">{task.description}</p> */}
     </div>
   );
 };
