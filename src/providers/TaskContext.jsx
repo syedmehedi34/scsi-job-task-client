@@ -5,9 +5,9 @@ const TaskContext = createContext();
 
 export const TaskProvider = ({ children }) => {
   const initialTasks = [
-    { _id: "1", title: "Task 1", category: "todo" },
-    { _id: "2", title: "Task 2", category: "inProgress" },
-    { _id: "3", title: "Task 3", category: "done" },
+    { id: "1", title: "Task 1", category: "todo" },
+    { id: "2", title: "Task 2", category: "inProgress" },
+    { id: "3", title: "Task 3", category: "done" },
   ];
   //?
   const [allTasks, loadingTasks, refetchTasks] = useTasks();
@@ -18,20 +18,6 @@ export const TaskProvider = ({ children }) => {
     setTasks(allTasks);
   }, [allTasks]);
   console.log(tasks);
-
-  // const [isEditing, setIsEditing] = useState(false);
-  // const handleAddTask = () => {
-  //   const newTask = {
-  //     id: Date.now().toString(),
-  //     title: "",
-  //     description: "",
-  //     category,
-  //   };
-  //   console.log(newTask);
-
-  //   // Update the task list by adding the new task
-  //   setTasks([...tasks, newTask]); // Add the new task to the existing task list
-  // };
 
   const handleDragEnd = (event) => {
     const { active, over } = event;

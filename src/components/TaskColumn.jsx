@@ -18,7 +18,7 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
   // ?  Handle adding a new task
   const handleAddTask = () => {
     const newTask = {
-      _id: Date.now().toString(),
+      id: Date.now().toString(),
       title: "",
       description: "",
       category,
@@ -56,7 +56,7 @@ export const TaskColumn = ({ title, category, tasks, setTasks, allTasks }) => {
         .filter((task) => task.category === category)
         .map((task) => (
           <TaskCard
-            key={task._id}
+            key={task.id}
             task={task}
             allTasks={allTasks}
             isNew={task.title === ""}

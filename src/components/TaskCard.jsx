@@ -13,7 +13,7 @@ export const TaskCard = ({
   setTasks,
 }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    _id: task._id,
+    id: task.id,
     data: { task },
   });
 
@@ -30,7 +30,7 @@ export const TaskCard = ({
 
   const handleClickSave = (data) => {
     const newTask = {
-      _id: Date.now().toString(),
+      id: Date.now().toString(),
       title: data.title,
       description: data.description,
       category,
