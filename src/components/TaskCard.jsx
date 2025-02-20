@@ -11,9 +11,6 @@ export const TaskCard = ({
   tasks,
   allTasks,
   setTasks,
-  // register,
-  // handleSubmit,
-  // handleClickSave,
 }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task.id,
@@ -27,53 +24,25 @@ export const TaskCard = ({
       }
     : {};
 
-  //? editing mode
-
   const [isEditing, setIsEditing] = useState(isNew);
-  // console.log(isEditing);
 
-  // ? Handle form submission
   const { handleSubmit, register, reset } = useForm();
 
-  // const handleClickSave = (data) => {
-  //   // console.log("Save task", data);
-  //   const newTask = {
-  //     id: Date.now().toString(),
-  //     title: data.title,
-  //     description: data.description,
-  //     category,
-  //   };
-  //   // console.log(newTask);
-  //   setTasks([...tasks, newTask]);
-  //   setIsEditing(false);
-  //   reset();
-  //   // console.log(tasks);
-  //   // console.log(newTask);
-
-  //   // todo: save the value to the database
-  // };
   const handleClickSave = (data) => {
     const newTask = {
       id: Date.now().toString(),
       title: data.title,
       description: data.description,
       category,
+      dueDate: data.dueDate, // Add due date to new task
     };
 
     const updatedTasks = allTasks.filter((task) => task.title.trim() !== "");
-    console.log(updatedTasks);
-
-    // Add the new task
     updatedTasks.push(newTask);
-
-    // Update the state with the filtered tasks and the new task
     setTasks(updatedTasks);
-
     setIsEditing(false);
     reset();
   };
-
-  // console.log(tasks);
 
   if (isEditing) {
     return (
@@ -98,6 +67,13 @@ export const TaskCard = ({
             maxLength={200}
             placeholder="Description (optional)"
             rows={3}
+          />
+
+          {/* Due Date */}
+          <input
+            type="date"
+            {...register("dueDate")}
+            className="w-full mb-2 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 transition-all"
           />
 
           <div className="flex justify-end gap-2">
@@ -129,7 +105,10 @@ export const TaskCard = ({
       className="p-3 mb-2 bg-white rounded shadow border cursor-grab hover:shadow-lg transition-all"
     >
       <h3 className="font-medium text-gray-800">{task.title}</h3>
-      {/* <p className=" ">{task.description}</p> */}
+      {/* Display Due Date if available */}
+      {task.dueDate && (
+        <p className="text-sm text-gray-600">Due: {task.dueDate}</p>
+      )}
     </div>
   );
 };
