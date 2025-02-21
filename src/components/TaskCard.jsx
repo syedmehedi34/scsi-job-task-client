@@ -218,6 +218,3 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
     </div>
   );
 };
-
-// mehedi@SCSI_123
-// mehedi@scsi.com

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import useTasks from "../hooks/useTasks";
 import useSecureAxios from "../hooks/useSecureAxios";
-// import { AuthContext } from "./AuthProvider";
+import { AuthContext } from "./AuthProvider";
 
 const TaskContext = createContext();
 
@@ -10,21 +10,16 @@ export const TaskProvider = ({ children }) => {
   const axiosSecure = useSecureAxios();
 
   const [tasks, setTasks] = useState(allTasks);
-  // useEffect(() => {
-  //   setTasks(allTasks);
-  // }, [allTasks]);
-  refetchTasks();
+  const { user } = useContext(AuthContext);
+
   useEffect(() => {
-    // Only update tasks if allTasks is different
-    refetchTasks();
-    if (JSON.stringify(allTasks) !== JSON.stringify(tasks)) {
+    if (user) {
       setTasks(allTasks);
     }
-  }, [allTasks, tasks]);
+  }, [allTasks]);
 
   // drag control
   const handleDragEnd = async (event) => {
-    refetchTasks();
     const { active, over } = event;
     if (!over) return;
 
@@ -37,14 +32,12 @@ export const TaskProvider = ({ children }) => {
         task.id === taskId ? { ...task, category: newCategory } : task
       )
     );
-    // console.log("Dropped in section:", newCategory);
 
     // Send the update request to the backend
     const res = await axiosSecure.patch("/drag_tasks", {
       taskId,
       newCategory,
     });
-    refetchTasks();
   };
 
   return (
