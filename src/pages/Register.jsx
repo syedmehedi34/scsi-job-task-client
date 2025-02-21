@@ -88,11 +88,13 @@ const Register = () => {
 
   return (
     <>
-      <div className="flex justify-center items-center">
-        <div className="card border bg-base-100 w-full max-w-lg shrink-0 shadow-lg p-10">
-          <h2 className="text-2xl font-semibold text-center">
-            Register your account
-          </h2>
+      <div className="flex justify-center items-center my-24">
+        <div className="card border bg-base-100  dark:bg-gray-800 dark:border-gray-600 w-full max-w-lg shrink-0 shadow-lg p-10">
+          <div>
+            <h2 className="text-2xl font-semibold text-center">
+              Register your account
+            </h2>
+          </div>
           <form onSubmit={handleSubmit} className="card-body pb-3">
             <div className="form-control">
               <label className="label">
@@ -102,7 +104,7 @@ const Register = () => {
                 name="name"
                 type="text"
                 placeholder="name"
-                className="input input-bordered"
+                className="input input-bordered dark:bg-gray-700"
                 required
               />
             </div>
@@ -115,7 +117,7 @@ const Register = () => {
                 type="text"
                 name="photo"
                 placeholder="photo-url"
-                className="input input-bordered"
+                className="input input-bordered dark:bg-gray-700"
                 required
               />
             </div>
@@ -129,7 +131,7 @@ const Register = () => {
                 name="email"
                 type="email"
                 placeholder="email"
-                className="input input-bordered"
+                className="input input-bordered dark:bg-gray-700"
                 required
               />
             </div>
@@ -144,7 +146,7 @@ const Register = () => {
                   name="password"
                   type={passwordVisible ? "text" : "password"}
                   placeholder="password"
-                  className="input input-bordered w-full"
+                  className="input input-bordered w-full dark:bg-gray-700"
                   required
                 />
                 <button

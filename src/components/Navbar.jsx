@@ -23,20 +23,22 @@ const Navbar = () => {
                   className="text-blue-600 dark:text-blue-500"
                   size={28}
                 />
-                <h1 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
-                  Task Management
-                </h1>
+                <Link to="/">
+                  <h1 className="text-lg md:text-2xl  font-semibold text-gray-800 dark:text-gray-200">
+                    Task Management
+                  </h1>
+                </Link>
               </div>
 
               <div className="flex items-center gap-4">
-                {user && (
+                {/* {user && (
                   <button
                     onClick={() => setIsActivityOpen(true)}
                     className="p-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
                   >
                     <Clock size={20} />
                   </button>
-                )}
+                )} */}
 
                 <button
                   onClick={toggleTheme}
@@ -49,7 +51,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-3">
                   {user ? (
                     <>
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300 md:flex hidden">
                         {user?.displayName}
                       </span>
                       <button
@@ -72,7 +74,7 @@ const Navbar = () => {
                       </Link>
 
                       <Link to="/auth/register">
-                        <button className="btn min-h-0 h-9 min-w-0 btn-outline  text-sm font-medium rounded-md transition-all">
+                        <button className="btn min-h-0 h-9 min-w-0 btn-outline dark:bg-gray-800 dark:text-gray-100 dark:border-none  text-sm font-medium rounded-md transition-all">
                           Register
                         </button>
                       </Link>

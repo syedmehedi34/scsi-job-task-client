@@ -10,13 +10,21 @@ export const TaskProvider = ({ children }) => {
   const axiosSecure = useSecureAxios();
 
   const [tasks, setTasks] = useState(allTasks);
+  // useEffect(() => {
+  //   setTasks(allTasks);
+  // }, [allTasks]);
+  refetchTasks();
   useEffect(() => {
-    setTasks(allTasks);
-    // refetchTasks();
-  }, [allTasks]);
+    // Only update tasks if allTasks is different
+    refetchTasks();
+    if (JSON.stringify(allTasks) !== JSON.stringify(tasks)) {
+      setTasks(allTasks);
+    }
+  }, [allTasks, tasks]);
 
   // drag control
   const handleDragEnd = async (event) => {
+    refetchTasks();
     const { active, over } = event;
     if (!over) return;
 
@@ -36,6 +44,7 @@ export const TaskProvider = ({ children }) => {
       taskId,
       newCategory,
     });
+    refetchTasks();
   };
 
   return (
