@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { Check, Pencil, Trash2, X } from "lucide-react";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import useSecureAxios from "../hooks/useSecureAxios";
 import { AuthContext } from "../providers/AuthProvider";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -16,7 +16,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
   const email = user?.email;
   // console.log(email);
 
-  const axiosSecure = useSecureAxios();
+  const axiosPublic = useAxiosPublic();
   const style = transform
     ? {
         transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
@@ -71,7 +71,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
 
     // Try to save the task to the backend
     try {
-      const res = await axiosSecure.patch("/tasks", { newTask });
+      const res = await axiosPublic.patch("/tasks", { newTask });
       // console.log("Response:", res.data);
     } catch (error) {
       console.error("Error saving task:", error);
@@ -101,7 +101,7 @@ export const TaskCard = ({ task, isNew, category, allTasks, setTasks }) => {
 
     // console.log("Task ID to delete:", taskId);
 
-    const res = await axiosSecure.delete("/tasks", { data: { taskId } });
+    const res = await axiosPublic.delete("/tasks", { data: { taskId } });
     // console.log("Deleted task:", res.data);
   };
 
