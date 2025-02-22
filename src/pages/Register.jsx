@@ -96,6 +96,26 @@ const Register = () => {
           closeOnClick: true,
           pauseOnHover: true,
         });
+        const user = {
+          name: result.user.displayName,
+          email: result.user.email,
+          photo: result.user.photoURL,
+          userId: Date.now().toString(16),
+        };
+        axiosPublic.post("/users", user).then((res) => {
+          if (res.data.insertedId) {
+            // console.log(res.data.insertedId);
+            toast.success(
+              "Congratulations! Successfully created a new account",
+              {
+                position: "top-left",
+                autoClose: 2000,
+                closeOnClick: true,
+                pauseOnHover: true,
+              }
+            );
+          }
+        });
         navigate(location?.state ? location.state : "/");
       })
       .catch((error) => {

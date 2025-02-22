@@ -4,10 +4,13 @@ import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../providers/AuthProvider";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const Login = () => {
   const { signInUser, signInWithGoogle, setUser, setLoginMail, setLoading } =
     useContext(AuthContext);
+  const axiosPublic = useAxiosPublic();
+
   const location = useLocation();
   const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -70,6 +73,30 @@ const Login = () => {
           autoClose: 1500,
           pauseOnHover: true,
         });
+        //?
+        // console.log(result.user);
+        const user = {
+          name: result.user.displayName,
+          email: result.user.email,
+          photo: result.user.photoURL,
+          userId: Date.now().toString(16),
+        };
+        axiosPublic.post("/users", user).then((res) => {
+          if (res.data.insertedId) {
+            // console.log(res.data.insertedId);
+            toast.success(
+              "Congratulations! Successfully created a new account",
+              {
+                position: "top-left",
+                autoClose: 2000,
+                closeOnClick: true,
+                pauseOnHover: true,
+              }
+            );
+          }
+        });
+        //?
+
         navigate(location?.state ? location.state : "/");
       })
       .catch((error) => {

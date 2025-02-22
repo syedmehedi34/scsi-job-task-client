@@ -10,7 +10,7 @@ import useUser from "../hooks/useUser";
 const Navbar = () => {
   const { user } = useContext(AuthContext);
   const [userInfo] = useUser();
-  console.log(userInfo);
+  // console.log(userInfo);
 
   const { isDark, toggleTheme } = useTheme();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
