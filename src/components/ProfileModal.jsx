@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, LogOut, Mail, User } from "lucide-react";
 import { useContext } from "react";
 import { AuthContext } from "../providers/AuthProvider";
+import useUser from "../hooks/useUser";
 
 export const ProfileModal = ({ isOpen, onClose }) => {
   const { user, logOut } = useContext(AuthContext);
+  const [userInfo, loadingUserInfo] = useUser();
 
   return (
     <AnimatePresence>
@@ -39,16 +41,16 @@ export const ProfileModal = ({ isOpen, onClose }) => {
 
               <div className="flex items-center gap-3 mb-4">
                 <img
-                  src={user?.photoURL}
-                  alt={user?.displayName}
+                  src={userInfo?.photo}
+                  alt={userInfo?.name}
                   className="w-16 h-16 rounded-full object-cover border-2 border-blue-500"
                 />
                 <div>
                   <h3 className="font-medium text-gray-800 dark:text-gray-200">
-                    {user?.displayName}
+                    {userInfo?.name}
                   </h3>
                   <p className="text-sm text-gray-500 dark:text-gray-400">
-                    @{user?.displayName}
+                    @{userInfo?.userId}
                   </p>
                 </div>
               </div>
@@ -56,11 +58,11 @@ export const ProfileModal = ({ isOpen, onClose }) => {
               <div className="space-y-3 mb-4">
                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                   <User size={16} />
-                  <span className="text-sm">{user?.displayName}</span>
+                  <span className="text-sm">{userInfo?.name}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                   <Mail size={16} />
-                  <span className="text-sm">{user?.email}</span>
+                  <span className="text-sm">{userInfo?.email}</span>
                 </div>
               </div>
 

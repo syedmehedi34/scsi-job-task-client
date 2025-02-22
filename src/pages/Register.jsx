@@ -4,11 +4,14 @@ import { AuthContext } from "../providers/AuthProvider";
 import { IoIosEye, IoIosEyeOff } from "react-icons/io";
 import { toast } from "react-toastify";
 import { GrGoogle } from "react-icons/gr";
+import { use } from "react";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const Register = () => {
   const navigate = useNavigate();
   const { createNewUser, setUser, updateUser, signInWithGoogle } =
     useContext(AuthContext);
+  const axiosPublic = useAxiosPublic();
 
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [error, setError] = useState("");
@@ -49,7 +52,28 @@ const Register = () => {
         // Update user profile using updateUser
         updateUser({ displayName: name, photoURL: photo })
           .then(() => {
-            navigate("/");
+            //?
+            const user = {
+              name,
+              email,
+              photo,
+              userId: Date.now().toString(16),
+            };
+            axiosPublic.post("/users", user).then((res) => {
+              if (res.data.insertedId) {
+                // console.log(res.data.insertedId);
+                toast.success(
+                  "Congratulations! Successfully created a new account",
+                  {
+                    position: "top-left",
+                    autoClose: 2000,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                  }
+                );
+                navigate("/");
+              }
+            });
           })
           .catch((err) => {
             console.log(err);

@@ -5,9 +5,13 @@ import { Trello, Sun, Moon, User as UserIcon, Clock } from "lucide-react";
 import { ProfileModal } from "./ProfileModal";
 import { ActivityLog } from "./ActivityLog";
 import { Link, NavLink } from "react-router-dom";
+import useUser from "../hooks/useUser";
 
 const Navbar = () => {
-  const { user, logOut } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  const [userInfo] = useUser();
+  console.log(userInfo);
+
   const { isDark, toggleTheme } = useTheme();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isActivityOpen, setIsActivityOpen] = useState(false);
@@ -52,15 +56,15 @@ const Navbar = () => {
                   {user ? (
                     <>
                       <span className="text-sm font-medium text-gray-700 dark:text-gray-300 md:flex hidden">
-                        {user?.displayName}
+                        {userInfo?.name}
                       </span>
                       <button
                         onClick={() => setIsProfileOpen(true)}
                         className="flex items-center gap-2"
                       >
                         <img
-                          src={user?.photoURL}
-                          alt={user?.displayName}
+                          src={userInfo?.photo}
+                          alt={userInfo?.name}
                           className="w-8 h-8 rounded-full object-cover border-2 border-blue-500"
                         />
                       </button>
