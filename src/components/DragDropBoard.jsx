@@ -5,6 +5,10 @@ import {
   useDroppable,
   useDraggable,
   DragOverlay,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import { rectSortingStrategy } from "@dnd-kit/sortable";
 import { SortableContext, useSortable, arrayMove } from "@dnd-kit/sortable";
@@ -17,7 +21,6 @@ const initialTasks = [
   { id: "4", title: "Task 4", category: "progressing" },
 ];
 
-// Sortable Draggable Card Component
 const SortableTask = ({ task }) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: task.id });
@@ -33,14 +36,13 @@ const SortableTask = ({ task }) => {
       {...listeners}
       {...attributes}
       style={style}
-      className="p-3 mb-2 bg-white rounded shadow cursor-grab"
+      className="p-3 mb-2 bg-white rounded shadow cursor-grab touch-none"
     >
       {task.title}
     </div>
   );
 };
 
-// Droppable Section Component
 const DroppableSection = ({ category, tasks }) => {
   const { setNodeRef } = useDroppable({ id: category });
 
@@ -59,9 +61,19 @@ const DroppableSection = ({ category, tasks }) => {
   );
 };
 
-// Main Drag & Drop Board
 const DragDropBoard = () => {
   const [tasks, setTasks] = useState(initialTasks);
+
+  // Add support for both touch and mouse sensors
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 150, // Prevent accidental drags
+        tolerance: 5, // Allow some movement before activation
+      },
+    })
+  );
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
@@ -74,14 +86,12 @@ const DragDropBoard = () => {
     if (!sourceTask) return;
 
     if (sourceTask.category !== newCategory) {
-      // Moving to a new category
       setTasks((prevTasks) =>
         prevTasks.map((task) =>
           task.id === draggedTaskId ? { ...task, category: newCategory } : task
         )
       );
     } else {
-      // Reordering within the same category
       const filteredTasks = tasks.filter(
         (task) => task.category === newCategory
       );
@@ -103,7 +113,11 @@ const DragDropBoard = () => {
   };
 
   return (
-    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+      sensors={sensors} // Enable touch support
+    >
       <div className="flex gap-6 p-4">
         <DroppableSection
           category="todo"
